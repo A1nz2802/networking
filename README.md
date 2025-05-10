@@ -11,9 +11,6 @@
     - Use the line con 0 command to enter console configuration mode.
         ```bash
         Switch(config)# line console 0
-        Switch(config-line)# password faith
-        Switch(config-line)# login
-        Switch(config-line)# exit
         ```
 
     - Use the password password-value subcommand to set the value of the 
@@ -30,7 +27,7 @@
         ```
 
 - **Step 3.** Configure the Telnet (vty) password:
-    - Use the line vty 0 15 command to enter vty configurat<ion mode for all 16 vty lines (numbered 0 through 15).
+    - Use the line vty 0 15 command to enter vty configuration mode for all 16 vty lines (numbered 0 through 15).
         ```bash
         Switch(config)# line vty 0 15
         ```
@@ -198,3 +195,19 @@
 
 > [!WARNING]
 > Commands **show dhcp lease** and **show ip default-gateway** are not supported in Packet Tracer. 
+
+## Configuring Speed, Duplex, and Description
+
+```bash
+mysw1# show interfaces status
+mysw1# configure terminal
+mysw1(config)# interface Fa0/1
+mysw1(config-if)# duplex full
+mysw1(config-if)# speed 100
+mysw1(config-if)# description Printer on 3rd floor, Preset to 100/full
+mysw1(config-if)# ^Z
+
+mysw1(config)# interface range FastEthernet 0/2 - 5
+mysw1(config-if-range)# description end-users connect here 
+mysw1(config-if-range)# ^Z 
+```

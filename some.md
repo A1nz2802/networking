@@ -32,3 +32,10 @@ sudo /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
 .qcow2 -> addons/quemu/respective_file_name/
 
 
+
+# PYTHON Init
+
+python -m venv venv
+source venv/bin/activate.fish
+pip install netmiko
+deactivate

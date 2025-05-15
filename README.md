@@ -18,62 +18,6 @@
 
 **Official image and platform requirements:** [https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions](https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions)
 
-## How to Copy Files to the EVE-NG VM
-
-Here are common methods to transfer files from your host machine to the virtual machine (VM) where EVE-NG is installed. Replace `<ip>` with the IP address of your EVE-NG VM.
-
-* **Using SSH (Secure Copy - `scp`):** This is the most secure and recommended method.
-
-    ```bash
-    scp <local_file_path> root@<eve-ng_ip>:<remote_directory_path>/
-    ```
-
-    Example to copy `some-file.zip` to the `/root/` directory on the EVE-NG VM:
-
-    ```bash
-    scp some-file.zip root@192.168.1.100:/root/
-    ```
-
-* **Using Telnet (for simple text-based configurations - less secure):** While possible for very basic text configurations, it's generally not recommended for file transfer due to its lack of security.
-
-    ```bash
-    telnet <eve-ng_ip> <port> # Requires a service running on the EVE-NG VM to handle the transfer.
-    ```
-
-* **Using SCP from within the EVE-NG VM:** You can also initiate a transfer from the EVE-NG VM itself if it has network access to your host.
-
-    ```bash
-    scp root@<host_ip>:<local_file_path> <remote_directory_path>/
-    ```
-
-## Configuring SSH on Linux Nodes in EVE-NG
-
-To enable SSH on a Linux node within EVE-NG, you typically need to install and configure the SSH server.
-
-```bash
-# Update package lists
-sudo apt update
-
-# Install the OpenSSH server (for Debian/Ubuntu)
-sudo apt install openssh-server
-
-# For CentOS
-# sudo yum install openssh-server
-
-# Edit the SSH server configuration file
-sudo nano /etc/ssh/sshd_config
-```
-
-In the `sshd_config` file, you can modify settings like the listening port (default is 22), permitted root login, and authentication methods. **Remember to restart the SSH service after making changes:**
-
-```bash
-# For Debian/Ubuntu
-sudo systemctl restart sshd
-
-# For CentOS
-# sudo systemctl restart sshd
-```
-
 ## Initial EVE-NG Configuration
 
 These are some initial commands that might be useful for setting up your EVE-NG environment.
@@ -84,6 +28,9 @@ sudo apt update
 
 # Fix permissions issues within the EVE-NG lab directory
 sudo /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+
+# Transfer files from your host machine to the virtual machine (VM) where EVE-NG is installed
+scp some-file.zip root@192.168.1.100:/root/
 ```
 
 ## Image Placement in EVE-NG

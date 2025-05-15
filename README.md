@@ -1,6 +1,6 @@
 ## Requirements:
 
-* Refer to the official image and platform requirements in the Cisco Modeling Labs documentation: [https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions](https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions)
+**Source Repository:** Images listed below were obtained from [https://github.com/hegdepavankumar/Cisco-Images-for-GNS3-and-EVE-NG](https://github.com/hegdepavankumar/Cisco-Images-for-GNS3-and-EVE-NG).
 
 | Image                                                              | Device Type       | Layer  | Key Information                                                |
 |:-------------------------------------------------------------------|:------------------|:-------|:---------------------------------------------------------------|
@@ -16,6 +16,7 @@
 | `linux-debian-10.3.0.tgz`                                          | Linux Node        |  N/A   | Debian 10 based Linux node for simulating hosts/servers/tools. |
 | `linux-ubuntu-21.04-desktop.tgz`                                   | Linux Node        |  N/A   | Ubuntu Desktop 21.04 based Linux node, higher resource usage.  |
 
+**Official image and platform requirements:** [https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions](https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions)
 
 ## How to Copy Files to the EVE-NG VM
 

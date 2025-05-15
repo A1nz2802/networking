@@ -3,7 +3,7 @@
 * Refer to the official image and platform requirements in the Cisco Modeling Labs documentation: [https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions](https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions)
 
 | Image                                                              | Device Type       | Layer  | Key Information                                                |
-|--:-----------------------------------------------------------------|--:----------------|--:-----|--:-------------------------------------------------------------|
+|:-------------------------------------------------------------------|:------------------|:-------|:---------------------------------------------------------------|
 | `i86bi-linux-l2-adventerprise-15.1b.zip`                           | IOU L2 Switch     |  L2    | Basic Layer 2 IOU switch.                                      |
 | `cat9kv-17.10.01-prd7.tgz` (Cisco Catalyst 9000v)                  | Cat9k Switch      |  L2/3  | Modern IOS XE switch, supports L2/L3. Higher resource usage.   |
 | `i86bi-linux-l3-jk9s-15.0.1.bin`                                   | IOU L3 Router     |  L3    | Basic Layer 3 IOU router.                                      |

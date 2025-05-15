@@ -1,3 +1,11 @@
+# CCNA 200-301 Official Cert Guide, Volume 1 - Chapter 7 Labs
+
+Lab topics focusing on the initial configuration of IPv4 settings on Cisco switches and basic interface configurations.
+
+- [Configuring IPv4 on a switch](#configuring-ipv4-on-a-switch)
+- [Configuring a Switch to Learn Its IP Address with DHCP](#configuring-a-switch-to-learn-its-ip-address-with-dhcp)
+- [Configuring Speed, Duplex, and Description](#configuring-speed-duplex-and-description)
+
 ## Configuring IPv4 on a switch
 
 - **Step 1.** Use the interface vlan 1 command in global configuration mode to enter interface VLAN 1 configuration mode.

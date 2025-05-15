@@ -1,3 +1,12 @@
+# CCNA 200-301 Official Cert Guide, Volume 1 - Chapter 6 Labs
+
+Lab topics covering auth concepts.
+
+- [Securing User Mode and Privileged Mode with Simple Passwords](#securing-user-mode-and-privileged-mode-with-simple-passwords)
+- [Securing User Mode Access with Local Usernames and Passwords](#securing-user-mode-access-with-local-usernames-and-passwords)
+- [Securing Remote Access with Secure Shell](#securing-remote-access-with-secure-shell)
+- [Securing User Mode Access with External Authentication Servers](#securing-user-mode-access-with-external-authentication-servers)
+
 ## Securing User Mode and Privileged Mode with Simple Passwords
 
 - **Step 1:** Configure the enable password with the enable secret password-value command.

@@ -1,67 +1,118 @@
-## Configuring IPv4 on a switch
+## Requirements:
 
-- **Step 1.** Use the interface vlan 1 command in global configuration mode to enter interface VLAN 1 configuration mode.
+* Refer to the official image and platform requirements in the Cisco Modeling Labs documentation: [https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions](https://developer.cisco.com/docs/modeling-labs/faq/#reference-platform-and-images-questions)
+
+| Image                                                              | Device Type       | Layer  | Key Information                                                |
+|--:-----------------------------------------------------------------|--:----------------|--:-----|--:-------------------------------------------------------------|
+| `i86bi-linux-l2-adventerprise-15.1b.zip`                           | IOU L2 Switch     |  L2    | Basic Layer 2 IOU switch.                                      |
+| `cat9kv-17.10.01-prd7.tgz` (Cisco Catalyst 9000v)                  | Cat9k Switch      |  L2/3  | Modern IOS XE switch, supports L2/L3. Higher resource usage.   |
+| `i86bi-linux-l3-jk9s-15.0.1.bin`                                   | IOU L3 Router     |  L3    | Basic Layer 3 IOU router.                                      |
+| `csr1000vng-universalk9.17.03.05-serial.tgz` (Cisco CSR1000v 17.x) | CSR1000v Router   |  L3    | Modern IOS XE router, also for SD-WAN. Higher resource usage.  |
+| `c2691-adventerprisek9-mz.124-15.T14.image`                        | Cisco 2691 Router |  L3    | Classic Dynamips router, simpler scenarios.                    |
+| `c3725-adventerprisek9-mz.124-15.T14.image`                        | Cisco 3725 Router |  L3    | Classic Dynamips router, more capable than c2691.              |
+| `c7200-adventerprisek9-mz.153-3.XB12.image`                        | Cisco 7200 Router |  L3    | High-performance Dynamips router.                              |
+| `c8000v-17.06.03.tgz` (Cisco Catalyst 8000V Edge)                  | C8000v Router     |  L3    | Modern IOS XE router for SD-WAN. Higher resource usage.        |
+| `linux-centos-8.tgz`                                               | Linux Node        |  N/A   | CentOS 8 based Linux node for simulating hosts/servers/tools.  |
+| `linux-debian-10.3.0.tgz`                                          | Linux Node        |  N/A   | Debian 10 based Linux node for simulating hosts/servers/tools. |
+| `linux-ubuntu-21.04-desktop.tgz`                                   | Linux Node        |  N/A   | Ubuntu Desktop 21.04 based Linux node, higher resource usage.  |
+
+
+## How to Copy Files to the EVE-NG VM
+
+Here are common methods to transfer files from your host machine to the virtual machine (VM) where EVE-NG is installed. Replace `<ip>` with the IP address of your EVE-NG VM.
+
+* **Using SSH (Secure Copy - `scp`):** This is the most secure and recommended method.
+
     ```bash
-    mysw1# configure terminal
-    mysw1(config)# interface vlan 1
-    mysw1(config-if)# 
+    scp <local_file_path> root@<eve-ng_ip>:<remote_directory_path>/
     ```
 
-- **Step 2.** Use the ip address ip-address mask command in interface configuration mode to assign an IP address and mask.
+    Example to copy `some-file.zip` to the `/root/` directory on the EVE-NG VM:
+
     ```bash
-    mysw1(config-if)# ip address 192.168.1.200 255.255.255.0
+    scp some-file.zip root@192.168.1.100:/root/
     ```
 
-- **Step 3.** Use the no shutdown command in interface configuration mode to enable the VLAN 1 interface if it is not already enabled.
+* **Using Telnet (for simple text-based configurations - less secure):** While possible for very basic text configurations, it's generally not recommended for file transfer due to its lack of security.
+
     ```bash
-    mysw1(config-if)# no shutdown
+    telnet <eve-ng_ip> <port> # Requires a service running on the EVE-NG VM to handle the transfer.
     ```
 
-- **Step 4.** Add the ip default-gateway ip-address command in global configuration mode to configure the default gateway.
+* **Using SCP from within the EVE-NG VM:** You can also initiate a transfer from the EVE-NG VM itself if it has network access to your host.
+
     ```bash
-    mysw1(config-if)# exit
-    mysw1(config)# ip default-gateway 192.168.1.1
+    scp root@<host_ip>:<local_file_path> <remote_directory_path>/
     ```
 
-- **Step 5.** (Optional) Add the ip name-server ip-address1 ip-address2 … command in global configuration mode to configure the switch to use Domain Name System (DNS) to resolve names into their matching IP address and check config.
-    ```bash
-    mysw1(config)# ip name-server 8.8.8.8
-    mysw1(config)# ip name-server 1.1.1.1
-    mysw1(config)# show running-config
-    mysw1(config)# show interfaces vlan 1
-    ```
+## Configuring SSH on Linux Nodes in EVE-NG
 
-## Configuring a Switch to Learn Its IP Address with DHCP
-- **Step 1.** Enter VLAN 1 configuration mode using the interface vlan 1 global configuration command, and enable the interface using the no shutdown command as necessary.
-    ```bash
-    mysw2(config)# interface vlan 1
-    ```
-- **Step 2.** Assign an IP address and mask using the ip address dhcp interface subcommand.
-    ```bash
-    mysw2(config-if)# ip address dhcp
-    mysw2(config-if)# no shutdown
-    mysw2(config-if)# ^Z
-    ```
-- **Step 3.** Check dhcp config
-    ```bash
-    mysw2(config)# show dhcp lease
-    ```
-
-> [!WARNING]
-> Commands **show dhcp lease** and **show ip default-gateway** are not supported in Packet Tracer. 
-
-## Configuring Speed, Duplex, and Description
+To enable SSH on a Linux node within EVE-NG, you typically need to install and configure the SSH server.
 
 ```bash
-mysw1# show interfaces status
-mysw1# configure terminal
-mysw1(config)# interface Fa0/1
-mysw1(config-if)# duplex full
-mysw1(config-if)# speed 100
-mysw1(config-if)# description Printer on 3rd floor, Preset to 100/full
-mysw1(config-if)# ^Z
+# Update package lists
+sudo apt update
 
-mysw1(config)# interface range FastEthernet 0/2 - 5
-mysw1(config-if-range)# description end-users connect here 
-mysw1(config-if-range)# ^Z 
+# Install the OpenSSH server (for Debian/Ubuntu)
+sudo apt install openssh-server
+
+# For CentOS
+# sudo yum install openssh-server
+
+# Edit the SSH server configuration file
+sudo nano /etc/ssh/sshd_config
+```
+
+In the `sshd_config` file, you can modify settings like the listening port (default is 22), permitted root login, and authentication methods. **Remember to restart the SSH service after making changes:**
+
+```bash
+# For Debian/Ubuntu
+sudo systemctl restart sshd
+
+# For CentOS
+# sudo systemctl restart sshd
+```
+
+## Initial EVE-NG Configuration
+
+These are some initial commands that might be useful for setting up your EVE-NG environment.
+
+```bash
+# Update package lists
+sudo apt update
+
+# Fix permissions issues within the EVE-NG lab directory
+sudo /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+```
+
+## Image Placement in EVE-NG
+
+Place the downloaded image files in the following directories within your EVE-NG VM:
+
+* **.image and .image.md5sum files (for Dynamips-based routers):** `/opt/unetlab/addons/dynamips/`
+* **.bin files (for IOU - IOS on Linux):** `/opt/unetlab/addons/iol/bin/`
+* **.qcow2 files (for Qemu-based VMs like Linux nodes and modern Cisco devices):** `/opt/unetlab/addons/quemu/<respective_file_name>/` (create the subdirectory if it doesn't exist)
+
+> [!IMPORTANT]
+> After adding new images, you might need to fix permissions again.
+
+## How to Execute Python Scripts
+
+These steps outline how to set up a virtual environment and run Python scripts (like those using Netmiko) on a Linux node within EVE-NG.
+
+```bash
+# Create a virtual environment named 'venv'
+python3 -m venv venv
+
+# Activate the virtual environment
+source venv/bin/activate.fish
+
+# Install the Netmiko library
+pip install netmiko
+
+# Run your Python script
+python -m chapter-6.01
+
+# Deactivate the virtual environment when you're done
+deactivate
 ```

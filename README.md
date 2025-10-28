@@ -1,3 +1,9 @@
+## Topics:
+
+- Chapter 5: Analyzing Ethernet LAN Switching
+- Chapter 6: Configuring Basic Switch Managment
+- Chapter 7: Configuring and Verifying Switch Interfaces
+
 ## Requirements:
 
 **Source Repository:** Images listed below were obtained from [https://github.com/hegdepavankumar/Cisco-Images-for-GNS3-and-EVE-NG](https://github.com/hegdepavankumar/Cisco-Images-for-GNS3-and-EVE-NG).
@@ -43,6 +49,19 @@ Place the downloaded image files in the following directories within your EVE-NG
 
 > [!IMPORTANT]
 > After adding new images, you might need to fix permissions again.
+
+## Initial Pnetlab Configuration
+
+Use ishare2 from this url: https://github.com/ishare2-org/ishare2-cli
+```sh 
+apt update
+
+# Install ishare2
+wget -O /usr/sbin/ishare2 https://raw.githubusercontent.com/ishare2-org/ishare2-cli/main/ishare2 && chmod +x /usr/sbin/ishare2 && ishare2
+
+# try upgrade ishare2 and pnetlab.
+ishare2 upgrade
+```
 
 ## How to Execute Python Scripts
 

@@ -10,11 +10,11 @@ The `arping` command is required for this lab, but its not included in the base 
 
 This can be done by using Pnetlab `cloud_nat` network feature.
 
-<img src="/lan-switching/.images/1.png" width="300">
+<img src="/chapter-5/.images/1.png" width="300">
 
 Connect the server to the `cloud_nat` node and then install the tool from the terminal.
 
-<img src="/lan-switching/.images/2.png" width="700">
+<img src="/chapter-5/.images/2.png" width="700">
 
 If you'are done, you can remove the `cloud_nat`. Turn on the switch (viosl2) and run these commands:
 
@@ -26,7 +26,7 @@ switch# show mac address-table
 
 The output should look similar to this:
 
-<img src="/lan-switching/.images/3.png" width="600">
+<img src="/chapter-5/.images/3.png" width="600">
 
 As you can see, the switch does not have any connected devices, and its `MAC address table` is empty.
 
@@ -34,13 +34,13 @@ As you can see, the switch does not have any connected devices, and its `MAC add
 
 Now, let's build this simple topology in pnetlab:
 
-<img src="/lan-switching/.images/4.png" width="500">
+<img src="/chapter-5/.images/4.png" width="500">
 
-<img src="/lan-switching/.images/5.png" width="500">
+<img src="/chapter-5/.images/5.png" width="500">
 
 We can to see the new entries in the MAC address table.
 
-<img src="/lan-switching/.images/6.png" width="700">
+<img src="/chapter-5/.images/6.png" width="700">
 
 ## Some Useful Commands
 
@@ -92,17 +92,17 @@ Command breakdown:
 
 First, check the current packet counters on the switch Gi0/0 interface:
 
-<img src="/lan-switching/.images/7.png" width="700">
+<img src="/chapter-5/.images/7.png" width="700">
 
 Note that the `Pkts In` (Packets In) counter is currently 163.
 
 Next, lets send 3 Ethernet frames from the Linux host to the switch using the `arping` command:
 
-<img src="/lan-switching/.images/8.png" width="700">
+<img src="/chapter-5/.images/8.png" width="700">
 
 This command transmits 3 packets. Now, lets check the switch interface counters again:
 
-<img src="/lan-switching/.images/9.png" width="700">
+<img src="/chapter-5/.images/9.png" width="700">
 
 As you can see, the `Pkts In` counter has increased from 163 to 166. This confirms that the switch received the 3 frames sent from the host.
 
@@ -118,7 +118,7 @@ show mac address-table aging-time
 show mac address-table count
 ```
 
-<img src="/lan-switching/.images/10.png" width="700">
+<img src="/chapter-5/.images/10.png" width="700">
 
 You can manually remove entries from the MAC address table.
 
@@ -143,13 +143,13 @@ This scenario demonstrates how MAC address learning and forwarding decisions ope
 The key, however, is which port they learn them on.
 
 
-<img src="/lan-switching/.images/11.png" width="700">
+<img src="/chapter-5/.images/11.png" width="700">
 
 Switch1 MAC table shows two types of entries: 
 - **Locally Learned**: It has learned the MAC addresses for Fred (...0200) and Barney (...0300) on their respective access ports, Gi0/0 and Gi0/1.
 - **Remotely Learned**: It has learned the MAC addresses for all hosts on Switch2 (Wilma, Betty, and the host ...f5e7) on a single port: Gi0/2. This is because, from Switch1's perspective, any frame originating from those remote hosts must arrive through the inter-switch link connected to Gi0/2.
 
-<img src="/lan-switching/.images/12.png" width="700">
+<img src="/chapter-5/.images/12.png" width="700">
 
 Switch2's MAC table shows the exact opposite:
 
@@ -157,6 +157,6 @@ Switch2's MAC table shows the exact opposite:
 
 - **Remotely Learned**: It has learned the MAC addresses for both Fred (...0200) and Barney (...0300) on port Gi0/2. This port is its only path to reach Switch1.
 
-<img src="/lan-switching/.images/13.png" width="700">
+<img src="/chapter-5/.images/13.png" width="700">
 
 This demonstrates the core logic of a switch: it doesn't know the full network topology, it only knows **which port to use to reach a specific MAC address**.

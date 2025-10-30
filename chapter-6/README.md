@@ -1,11 +1,13 @@
-# CCNA 200-301 Official Cert Guide, Volume 1 - Chapter 6 Labs
+# Configuring Basic Switch Managment
 
-Lab topics covering auth concepts.
+This lab covers how to secure switch access and configure basic IP connectivity for remote management.
 
-- [Securing User Mode and Privileged Mode with Simple Passwords](#securing-user-mode-and-privileged-mode-with-simple-passwords)
-- [Securing User Mode Access with Local Usernames and Passwords](#securing-user-mode-access-with-local-usernames-and-passwords)
-- [Securing Remote Access with Secure Shell](#securing-remote-access-with-secure-shell)
-- [Securing User Mode Access with External Authentication Servers](#securing-user-mode-access-with-external-authentication-servers)
+* [Securing User Mode and Privileged Mode with Simple Passwords](#securing-user-mode-and-privileged-mode-with-simple-passwords)
+* [Securing User Mode Access with Local Usernames and Passwords](#securing-user-mode-access-with-local-usernames-and-passwords)
+* [Securing Remote Access with Secure Shell](#securing-remote-access-with-secure-shell)
+* [Configuring IPv4 on a Switch](#configuring-ipv4-on-a-switch)
+* [Configuring a Switch to Learn Its IP Address with DHCP](#configuring-a-switch-to-learn-its-ip-address-with-dhcp)
+* [Verifying IPv4 on a Switch](#verifying-ipv4-on-a-switch)
 
 ## Securing User Mode and Privileged Mode with Simple Passwords
 
@@ -98,8 +100,6 @@ Lab topics covering auth concepts.
         Switch(config-line)# no password
         ```
 
-
-
 ## Securing Remote Access with Secure Shell
 
 - **Step 1.** Configure the switch to generate a matched public and private key pair to use for encryption:
@@ -152,5 +152,54 @@ Lab topics covering auth concepts.
     
 > [!NOTE]
 > To control which protocols a switch supports on its vty lines, use the **transport input { all | none | telnet | ssh}** vty subcommand in vty mode.
+
+## Configuring IPv4 on a Switch
+
+- **Step 1.** Use the interface vlan 1 command in global configuration mode to enter interface VLAN 1 configuration mode:
+    ```bash
+    mysw1(config)# interface vlan 1
+    ```
+- **Step 2.** Use the ip address ip-address mask command in interface configuration mode to assign an IP address and mask:
+    ```bash
+    mysw1(config-if)# ip address 192.168.1.200 255.255.255.0
+    ```
+- **Step 3.** Use the no shutdown command in interface configuration mode to enable the VLAN 1 interface if it is not already enabled:
+    ```bash
+    mysw1(config-if)# no shutdown
+    mysw1(config-if)# exit
+    ```
+- **Step 4.** Add the ip default-gateway ip-address command in global configuration mode to configure the default gateway:
+    ```bash
+    mysw1(config)# ip default-gateway 192.168.1.1
+    ```
+- **Step 5.** (Optional) Add the ip name-server ip-address1 ip-address2 … command in global configuration mode to configure the switch to use the Domain Name System (DNS) to resolve names into their matching IP address:
+    ```bash
+    mysw1(config)# ip name-server 8.8.8.8 8.8.4.4
+    ```
+
+## Configuring a Switch to Learn Its IP Address with DHCP
+
+- **Step 1.** Enter VLAN 1 configuration mode using the interface vlan 1 global configuration command, and enable the interface using the no shutdown command as necessary:
+    ```bash
+    mysw1(cofnig)# interface vlan 1
+    ```
+
+- **Step 2.** Assign an IP address and mask using the ip address dhcp interface
+subcommand:
+    ```bash
+    mysw1(config-if)# ip address dhcp
+    mysw1(config-if)# no shutdown
+    ```
+
+## Verifying IPv4 on a Switch
+
+```bash
+mysw1# show dhcp lease
+mysw1# show interfaces vlan 1
+mysw1# show ip default-gateway
+```
+
+> [!WARNING]
+> Commands **show dhcp lease** and **show ip default-gateway** are not supported in Packet Tracer. 
 
 ## Securing User Mode Access with External Authentication Servers

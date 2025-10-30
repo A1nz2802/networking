@@ -1,6 +1,6 @@
 # Securing User Mode Access with Local Usernames and Passwords
 
-# tested on i86bi-linux-l2-adventerprise-15.1b
+# tested on `viosl2-adventerprisek9-m.ssa.high_iron_20200929` 
 from utils.base import execute_commands
 
 connection_type = "telnet"
@@ -21,7 +21,7 @@ commands = [
     "no password",
     "exit",
 
-    "line vty 0 4",
+    "line vty 0 1500",
     "login local",
     "no password",
     "end",

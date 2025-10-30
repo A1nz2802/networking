@@ -1,4 +1,4 @@
-# Securing User Mode and Privileged Mode with Simple Passwords
+# Configuring IPv4 on a Switch
 
 # tested on `viosl2-adventerprisek9-m.ssa.high_iron_20200929` 
 from utils.base import execute_commands
@@ -7,23 +7,19 @@ connection_type = "telnet"
 
 device = {
     "host": "172.16.59.128",
-    "port": 32769,
+    "port": 32771,
 }
 
 commands = [
     "enable",
     "configure terminal",
-    "enable secret love",
-
-    "line console 0",
-    "password faith",
-    "login",
+    "interface vlan 1",
+    "ip address 192.168.1.200 255.255.255.0",
+    "no shutdown",
     "exit",
 
-    "line vty 0 1500",
-    "password hope",
-    "login",
-    "end",
+    "ip default-gateway 192.168.1.1",
+    "ip name-server 8.8.8.8 8.8.4.4",
 ]
 
 execute_commands(device, connection_type, commands)

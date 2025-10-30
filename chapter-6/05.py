@@ -1,4 +1,4 @@
-# Securing Remote Access with Secure Shell
+# Configuring a Switch to Learn Its IP Address with DHCP.
 
 # tested on `viosl2-adventerprisek9-m.ssa.high_iron_20200929` 
 from utils.base import execute_commands

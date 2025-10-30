@@ -1,4 +1,4 @@
-# MAC Address Learning Lab
+# Analyzing Ethernet LAN Switching
 
 This lab was tested with the following images:
 - `Linux-ubuntu-server-20.04` (Linux host)

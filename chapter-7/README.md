@@ -1,11 +1,18 @@
 # Configuring and Verifying Switch Interfaces
 
-This chapter covering this topics:
+This chapter covers the following topics:
 
-- Autonegotiation Rules.
-- [Configuring Speed, Duplex, and Description](#configuring-speed-duplex-and-description)
+* [Autonegotiation Rules](#autonegotiation-rules)
+* [Configuring Autonegotiation, Speed and Duplex](#configuring-autonegotiation-speed-and-duplex)
+    + [Use Autonegotiation on Cisco Switches](#use-autonegotiation-on-cisco-switches)
+    + [Setting Speed and Duplex Manually](#setting-speed-and-duplex-manually)
+* [Using Auto-MDIX on Cisco Switches](#using-auto-mdix-on-cisco-switches)
+* [Administratively Controlling Interface State with Shutdown](#administratively-controlling-interface-state-with-shutdown)
+* [Removing Configuration with the No Command](#removing-configuration-with-the-no-command)
+* [Interface Status Code](#interface-status-code)
+* [Common Layer 1 Problems on Working Interfaces](#common-layer-1-problems-on-working-interfaces)
 
-## Autonegotiation Rules:
+## Autonegotiation Rules
 
 **Case 1**: Autonegotiation enabled on both devices (Auto/Auto).
 
@@ -32,7 +39,7 @@ Never mix configurations. In real networks, use autonegotiation. If one side is 
 >[!NOTE]
 Hubs do not participate in autonegotiation, they do not generate FLP messages.
 
-## Configuring Autonegotiation, Speed, and Duplex
+## Configuring Autonegotiation, Speed and Duplex
 
 ### Use Autonegotiation on Cisco Switches
 
@@ -110,7 +117,7 @@ sw1(config-if)# no mdix auto
 
 ## Administratively Controlling Interface State with Shutdown
 
-Cisco switches use the shutdown command to disable an interface and the no shutdown command to enable an interface.
+Cisco switches use the `shutdown` command to disable an interface and the `no shutdown` command to enable an interface.
 
 ```bash
 sw1# configure terminal
@@ -120,5 +127,56 @@ sw1(config-if)# shutdown
 
 <img src="/chapter-7/.images/06.png">
 
-To re-activate g0/0 interface, just use `no shutdown` command.
+## Removing Configuration with the No Command
 
+How can you remove that configuration? With some IOS configuration commands (but not all), you can revert to the default setting by issuing a no version of the command.
+
+```bash
+sw1(config)# int g0/0
+sw1(config-if)# no speed
+sw1(config-if)# no duplex
+sw1(config-if)# no description
+sw1(config-if)# no shutdown
+
+# Be awarned, this command lists many commands.
+sw1# show running-config all
+
+# Revert all interfaces subcommands to their default settings.
+sw1(config)# default int g0/0
+```
+
+## Interface Status Code
+
+Cisco switches use two different sets of interface status codes. The switch `show interfaces` and `show interfaces description` commands list a two-code status named the `line status` and `protocol status`.
+
+- **line status**: refers to whether the **Layer 1** standard works.
+- **protocol status**: refers to whether the **Layer 2** works.
+
+>[!NOTE]
+The book refers to these two status codes in shorthand by just listing the two codes with a slash between them, such as `up/up` or `down/down`.
+
+Other commands, like the `show interfaces status` command, use a single-code interface status. The single-word status words correlate to different combinations of the two-code interface status codes.
+
+<img src="/chapter-7/.images/07.png">
+
+## Common Layer 1 Problems on Working Interfaces
+
+When the interface reaches the `connected` (`up/up`) state, the switch considers the interface to be working. The switch, of course, tries to use the interface, and at the same time, the switch keeps various interface counters. These interface counters can help identify problems that can occur even though the interface reaches a `connected` state.
+
+<img src="/chapter-7/.images/08.png">
+
+**Runts:** Frames that did not meet the minimum frame size requirement (64 bytes, including the 18-byte destination MAC, source MAC, type, and FCS). Collisions can cause it.
+
+**Giants:** Frames that exceed the maximum frame size requirement (default 1518 bytes, including the 18-byte destination MAC, source MAC, type, and FCS).
+
+**Input Errors:** A total of many counters, including runts, giants, no buffer, CRC, frame, overrun, and ignored counts.
+
+**CRC:** Received frames that did not pass the FCS math; can be caused by collisions.
+
+**Frame:** Received frames that have an illegal format, for example, ending with a partial byte, can be caused by collisions.
+
+**Packets Output:** Total number of packets (frames) forwarded out the interface. Output Errors: Total number of packets (frames) that the switch port tried to transmit but for which some problem occurred.
+
+**Collisions:** Counter of all collisions that occur when the interface is transmitting a frame. 
+
+**Late Collisions:** The subset of all collisions that happen after the 64th byte of the frame has been transmitted. (In a properly working Ethernet LAN, collisions should occur within the first 64 bytes; `late collisions` today often point to a duplex mismatch.)

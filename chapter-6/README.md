@@ -1,6 +1,6 @@
 # Configuring Basic Switch Managment
 
-This lab covers how to secure switch access and configure basic IP connectivity for remote management.
+This chapter covers the following topics:
 
 * [Securing User Mode and Privileged Mode with Simple Passwords](#securing-user-mode-and-privileged-mode-with-simple-passwords)
 * [Securing User Mode Access with Local Usernames and Passwords](#securing-user-mode-access-with-local-usernames-and-passwords)
@@ -8,6 +8,7 @@ This lab covers how to secure switch access and configure basic IP connectivity 
 * [Configuring IPv4 on a Switch](#configuring-ipv4-on-a-switch)
 * [Configuring a Switch to Learn Its IP Address with DHCP](#configuring-a-switch-to-learn-its-ip-address-with-dhcp)
 * [Verifying IPv4 on a Switch](#verifying-ipv4-on-a-switch)
+* [Useful Commands](#useful-commands)
 
 ## Securing User Mode and Privileged Mode with Simple Passwords
 
@@ -201,5 +202,24 @@ mysw1# show ip default-gateway
 
 > [!WARNING]
 > Commands **show dhcp lease** and **show ip default-gateway** are not supported in Packet Tracer. 
+
+## Useful Commands
+
+```bash
+# Disables syslog messages from appearing on the console port.
+mysw1(config)# no logging console
+
+# Re-enables the display of syslog messages on the console port.
+mysw1(config)# logging console
+
+# Prevents log messages from interrupting your command-line typing.
+mysw1(config-line)# logging synchronous
+
+# Sets the idle timeout for the current line (console or vty) before disconnection.
+mysw1(config-line)# exec-timeout <mins> <secs>
+
+# Disables the switch's attempt to resolve mistyped commands as hostnames via DNS.
+mysw1(config)# no ip domain-lookup
+```
 
 ## Securing User Mode Access with External Authentication Servers

@@ -1,75 +1,124 @@
-# CCNA 200-301 Official Cert Guide, Volume 1 - Chapter 7 Labs
+# Configuring and Verifying Switch Interfaces
 
-Lab topics focusing on the initial configuration of IPv4 settings on Cisco switches and basic interface configurations.
+This chapter covering this topics:
 
-- [Configuring IPv4 on a switch](#configuring-ipv4-on-a-switch)
-- [Configuring a Switch to Learn Its IP Address with DHCP](#configuring-a-switch-to-learn-its-ip-address-with-dhcp)
+- Autonegotiation Rules.
 - [Configuring Speed, Duplex, and Description](#configuring-speed-duplex-and-description)
 
-## Configuring IPv4 on a switch
+## Autonegotiation Rules:
 
-- **Step 1.** Use the interface vlan 1 command in global configuration mode to enter interface VLAN 1 configuration mode.
-    ```bash
-    mysw1# configure terminal
-    mysw1(config)# interface vlan 1
-    mysw1(config-if)# 
-    ```
+**Case 1**: Autonegotiation enabled on both devices (Auto/Auto).
 
-- **Step 2.** Use the ip address ip-address mask command in interface configuration mode to assign an IP address and mask.
-    ```bash
-    mysw1(config-if)# ip address 192.168.1.200 255.255.255.0
-    ```
+- **Process:** Both devices exchange their capabilities using Fast Link Pulses (FLPs).
+- **Speed:** They agree to use the **highest common speed**.
+- **Duplex:** They agree to use the **best common duplex** (Full-Duplex is always preferred).
 
-- **Step 3.** Use the no shutdown command in interface configuration mode to enable the VLAN 1 interface if it is not already enabled.
-    ```bash
-    mysw1(config-if)# no shutdown
-    ```
+**Case 2**: Autonegotiation enabled on one device (Auto). Disabled on the other (Manual).
 
-- **Step 4.** Add the ip default-gateway ip-address command in global configuration mode to configure the default gateway.
-    ```bash
-    mysw1(config-if)# exit
-    mysw1(config)# ip default-gateway 192.168.1.1
-    ```
 
-- **Step 5.** (Optional) Add the ip name-server ip-address1 ip-address2 … command in global configuration mode to configure the switch to use Domain Name System (DNS) to resolve names into their matching IP address and check config.
-    ```bash
-    mysw1(config)# ip name-server 8.8.8.8
-    mysw1(config)# ip name-server 1.1.1.1
-    mysw1(config)# show running-config
-    mysw1(config)# show interfaces vlan 1
-    ```
+- **Speed:** Detect the neighboring device’s physical layer standard by analyzing the
+neighbor’s incoming frames. Use that speed.
+- **Duplex:** The 'Auto' side **cannot detect duplex** and applies a default rule:
+    - If speed is 10/100 Mbps **--->** defaults to **Half-Duplex**.
+    - If speed is 1 Gbps or faster **--->** defaults to **Full-Duplex**.
 
-## Configuring a Switch to Learn Its IP Address with DHCP
-- **Step 1.** Enter VLAN 1 configuration mode using the interface vlan 1 global configuration command, and enable the interface using the no shutdown command as necessary.
-    ```bash
-    mysw2(config)# interface vlan 1
-    ```
-- **Step 2.** Assign an IP address and mask using the ip address dhcp interface subcommand.
-    ```bash
-    mysw2(config-if)# ip address dhcp
-    mysw2(config-if)# no shutdown
-    mysw2(config-if)# ^Z
-    ```
-- **Step 3.** Check dhcp config
-    ```bash
-    mysw2(config)# show dhcp lease
-    ```
+`Parallel Detection`: A fallback mechanism used by an autonegotiation-enabled device when it does not receive any FLPs. It determines the link's speed by analyzing the partner's incoming electrical signal but cannot detect the duplex setting.
 
-> [!WARNING]
-> Commands **show dhcp lease** and **show ip default-gateway** are not supported in Packet Tracer. 
+`Duplex Mistmatch`: A network fault state where one end of a link operates in full-duplex while the other end operates in half-duplex. This forces the half-duplex side (which must listen before sending, per CSMA/CD rules) to interpret simultaneous transmissions from the full-duplex side as "collisions." The result is a link that is technically "up" but has catastrophic performance due to constant errors and retransmissions.
 
-## Configuring Speed, Duplex, and Description
+>[!NOTE]
+Never mix configurations. In real networks, use autonegotiation. If one side is set manually, the other side must be set to the exact same manual configuration.
+
+>[!NOTE]
+Hubs do not participate in autonegotiation, they do not generate FLP messages.
+
+## Configuring Autonegotiation, Speed, and Duplex
+
+### Use Autonegotiation on Cisco Switches
+
+The commands `speed auto` and `duplex auto` are used to explicitly set an interface back to this default behavior. You can verify the results with `show interfaces status`, looking for the `a-` prefix (like `a-full` or `a-1000`) in the output, which confirms autonegotiation was successful.
 
 ```bash
-mysw1# show interfaces status
-mysw1# configure terminal
-mysw1(config)# interface Fa0/1
-mysw1(config-if)# duplex full
-mysw1(config-if)# speed 100
-mysw1(config-if)# description Printer on 3rd floor, Preset to 100/full
-mysw1(config-if)# ^Z
+sw1# configure terminal
+sw1(config)# interface gigabitEthernet 0/0
 
-mysw1(config)# interface range FastEthernet 0/2 - 5
-mysw1(config-if-range)# description end-users connect here 
-mysw1(config-if-range)# ^Z 
+sw1(config-if)# speed auto 
+sw1(config-if)# duplex auto
+sw1(config-if)# description Printer on 3rd floor, Preset to auto/autonegotiation-enabled
+
+# Verify the operational status interfaces
+sw1# show interfaces status
+sw1# show interfaces g0/0
+
+# Apply configuration to a range of interfaces
+sw1(config)# interface range gigabitEthernet 0/0, 0/2
+sw1(config-if-range)# description config for G0/0 AND G0/2 interfaces
+
+sw1(config)# interface range gigabitEthernet 0/0-3
+sw1(config-if-range)# description config for interfaces G0/0 through G0/3
 ```
+
+### Setting Speed and Duplex Manually
+
+Cisco recommends that you configure both devices on the ends of the link (to the same values, of course).
+
+<img src="/chapter-7/.images/01.png">
+
+`sw1` and `sw2` has default configuration.
+
+>[!NOTE]
+On some Cisco models, you must explicity disable autonegotiation whit `no negotiation auto` command before you can set the speed and duplex.
+
+<img src="/chapter-7/.images/02.png" width="700">
+
+```bash
+sw1# configure terminal
+sw1(config)# interface gigabitEthernet 0/0
+
+# Disable autonegotiation
+sw1(config-if)# no negotiation auto
+
+# Set the speed and duplex
+sw1(config-if)# speed 1000
+sw1(config-if)# duplex full
+sw1(config-if)# ^Z
+sw1# show running-config interface gigabitEthernet 0/0
+```
+
+You can verifying manual configuration with `show running-config` or `show interfaces status` commands.
+
+<img src="/chapter-7/.images/03.png" width="500">
+
+<img src="/chapter-7/.images/04.png">
+<img src="/chapter-7/.images/05.png">
+
+As you can see, both `sw1` and `sw2` show the same operational settings (`full` and `1000`). The absence of the `a-` prefix on both switches confirms that autonegotiation is inactive and that the manual configuration has been correctly applied to both ends of the link.
+
+## Using Auto-MDIX on Cisco Switches
+
+`Auto-MDIX`, when enabled, gives an Ethernet interface the ability to sense when the attached cable uses the wrong cable pinout and to overcome the problem. For instance, a link between two switches should use a `crossover cable pinout`. If the cable has a `straight-through pinout`, the auto-MDIX feature can sense the issue and swap pairs in the interface electronics, achieving the same effect as a crossover cable.
+
+- **Cisco Catalyst switches** use auto-MDIX by default, with a default interface subcommand of `mdix auto`.
+- Auto-MDIX works if either one or both endpoints on the link enable auto-MDIX.
+- To disable auto-MDIX, disable it on both ends of the link using the `no mdix auto` interface command.
+
+```bash
+sw1# configure terminal
+sw1(config)# int g0/0
+sw1(config-if)# no mdix auto
+```
+
+## Administratively Controlling Interface State with Shutdown
+
+Cisco switches use the shutdown command to disable an interface and the no shutdown command to enable an interface.
+
+```bash
+sw1# configure terminal
+sw1(config)# int g0/0
+sw1(config-if)# shutdown
+```
+
+<img src="/chapter-7/.images/06.png">
+
+To re-activate g0/0 interface, just use `no shutdown` command.
+

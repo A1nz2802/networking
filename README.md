@@ -1,8 +1,10 @@
-## Topics:
+## Chapters:
 
 - Chapter 5: Analyzing Ethernet LAN Switching
 - Chapter 6: Configuring Basic Switch Managment
 - Chapter 7: Configuring and Verifying Switch Interfaces
+- Chapter 8: Implementing Ethernet Virtual LANs
+- Chapter 9: Spanning Tree Protocol Concepts
 
 ## Requirements:
 

@@ -5,6 +5,7 @@
 - Chapter 7: Configuring and Verifying Switch Interfaces
 - Chapter 8: Implementing Ethernet Virtual LANs
 - Chapter 9: Spanning Tree Protocol Concepts
+- Chapter 10: RSTP and EtherChannel Configuration
 
 ## Requirements:
 

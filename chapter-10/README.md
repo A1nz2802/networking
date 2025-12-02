@@ -21,6 +21,8 @@ This lab simulates a redundant campus network with a three-switch distribution t
     - **ASW2:** Lab/Testing switch (High risk of rogue devices).
 - **VLANs:** 10 (Native), 20 (User_Data), 30 (Server_Farm).
 
+<img src=".images/14.png">
+
 ### 2. Base Configuration & Layer 2 Setup
 
 Basic settings & VLAN creation apply to all switches (`DSW1`, `DSW2`, `DSW3`, `ASW1`, `ASW2`).
@@ -278,3 +280,104 @@ DSW2(config)# channel-group 21 mode auto
 ```
 
 ### 5. Security & Hardening
+
+#### 5.1. Edge Security on ASW1 (Production)
+
+```bash
+ASW1(config)# spanning-tree portfast edge default
+ASW1(config)# spanning-tree portfast edge bpduguard default
+
+ASW1(config)# int g1/0 
+ASW1(config-if)# description USER_PC
+ASW1(config-if)# switchport mode access
+ASW1(config-if)# switchport access vlan 20
+
+ASW1(config)# int g1/1
+ASW1(config-if)# description ESXi_Server
+ASW1(config-if)# switchport trunk encapsulation dot1q
+ASW1(config-if)# switchport mode trunk
+ASW1(config-if)# switchport trunk native vlan 10
+ASW1(config-if)# switchport nonegotiate
+ASW1(config-if)# spanning-tree portfast edge trunk
+ASW1(config-if)# spanning-tree bpduguard enable
+
+# check the previus config
+ASW1# show spanning-tree summary
+ASW1# show spanning-tree int g1/0 detail
+ASW1# show spanning-tree int g1/1 detail
+```
+**Global config:**
+
+<img src=".images/15.png">
+
+<br>
+<br>
+
+**Interface g1/0 detail**
+
+<img src=".images/16.png">
+<br>
+<br>
+
+**Interface g1/1 detail**
+
+<img src=".images/17.png">
+
+
+#### 5.2. Edge Security on ASW2 (Lab/Testing)
+
+```bash
+ASW2(config)# spanning-tree portfast bpdufilter default
+
+ASW2(config)# int g1/0
+ASW2(config-if)# description LAB_LAPTOP
+ASW2(config-if)# switchport mode access
+ASW2(config-if)# switchport access vlan 20
+ASW2(config-if)# spanning-tree portfast
+
+
+ASW2(config)# int g1/1
+ASW2(config-if)# description ROGUE_SWITCH_PORT
+ASW2(config-if)# switchport mode access
+ASW2(config-if)# switchport access vlan 20
+ASW2(config-if)# spanning-tree bpdufilter enable
+
+ASW2# show spanning-tree summary
+ASW2# show spanning-tree int g1/0 detail
+ASW2# show spanning-tree int g1/1 detail
+```
+
+<img src=".images/18.png">
+
+#### 5.3. Core Integrity (Root & Loop Guard)
+
+```bash
+# On DSW1 (Downlinks to Access)
+DSW1(config)# int port-channel 10
+DSW1(config-if)# spanning-tree guard root
+
+# On DSW2 (Downlinks to Access)
+DSW2(config)# int range port-channel 11, port-channel 20
+DSW2(config-if)# spanning-tree guard root
+
+# On DSW3 (Downlinks to Access)
+DSW3(config)# int port-channel 21
+DSW3(config-if)# spanning-tree guard root
+
+# Check the config
+DSW1# show spanning-tree interface port-channel 10 detail
+```
+
+```bash
+# On ASW1
+ASW1(config)# int range port-channel 10, port-channel 11
+ASW1(config-if)# spanning-tree guard loop
+
+# On ASW2
+ASW2(config)# int range port-channel 20, port-channel 21
+ASW2(config-if)# spanning-tree guard loop
+
+# Check the config
+ASW1# show spanning-tree interface port-channel 10 detail
+ASW1# show spanning-tree inconsistentports 
+```

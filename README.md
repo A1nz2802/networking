@@ -7,6 +7,7 @@
 - Chapter 9: Spanning Tree Protocol Concepts
 - Chapter 10: RSTP and EtherChannel Configuration
 - Chapter 11-15: IPv4 Addressing
+- Chapter 16-17: IPv4 Routing
 
 ## Requirements:
 
@@ -53,6 +54,14 @@ Place the downloaded image files in the following directories within your EVE-NG
 
 > [!IMPORTANT]
 > After adding new images, you might need to fix permissions again.
+
+<img src=".images/01.png">
+
+If you don't have the `iourc` file, you can generate like this:
+
+```sh
+python2 /opt/unetlab/addons/iol/bin/CiscoIOUKeygen.py
+```
 
 ## Initial Pnetlab Configuration
 

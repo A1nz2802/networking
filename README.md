@@ -8,6 +8,7 @@
 - Chapter 10: RSTP and EtherChannel Configuration
 - Chapter 11-15: IPv4 Addressing
 - Chapter 16-17: IPv4 Routing
+- Chapter 18: IP Routing in the LAN
 
 ## Requirements:
 

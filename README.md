@@ -9,6 +9,7 @@
 - Chapter 11-15: IPv4 Addressing
 - Chapter 16-17: IPv4 Routing
 - Chapter 18: IP Routing in the LAN
+- Chapter 19: IP Addressing on Hosts
 
 ## Requirements:
 

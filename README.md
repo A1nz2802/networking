@@ -10,6 +10,8 @@
 - Chapter 16-17: IPv4 Routing
 - Chapter 18: IP Routing in the LAN
 - Chapter 19: IP Addressing on Hosts
+- Chapter 20: Troubleshooting IPv4 Routing
+- Chapter 21: Understanding OSPF Concepts
 
 ## Requirements:
 

@@ -1,4 +1,76 @@
+# Understanding OSPF Concepts
+
+This chapter covers the foundational theory behind **OSPF (Open Shortest Path First)**. Before configuring OSPFv2, it is crucial to understand how Link-State routing protocols operate, how routers establish neighbor relationships, and how the Shortest Path First (SPF) algorithm calculates the best routes.
+
+This document serves as a visual guide and terminology reference for OSPF operations.
+
+---
+
+## 1. Routing Protocol Fundamentals
+
+Routing protocols are a set of messages, rules, and algorithms used by routers to learn routes dynamically. OSPF is an **Interior Gateway Protocol (IGP)** that uses a **Link-State** algorithm, meaning every router builds a complete map of the network topology before making routing decisions.
+
+<img src="/chapter-21/.images/01.png">
+
+---
+
+## 2. Topology Information and LSDB Synchronization
+
+Unlike Distance Vector protocols that route by rumor, OSPF routers flood the internetwork with **LSAs (Link-State Advertisements)**. Every router collects these LSAs to build an identical **LSDB (Link-State Database)**. 
+
+<img src="/chapter-21/.images/02.png">
+
+To form relationships and synchronize these databases, OSPF goes through specific neighbor states, starting with the `Hello` packet exchange to reach the **2-Way** state.
+
+<img src="/chapter-21/.images/03.png">
+
+Once the 2-Way state is reached (and DR/BDR elections are settled), routers proceed to fully exchange their LSDBs. They transition through the **ExStart, Exchange, and Loading** states by sharing Database Description (DD) packets and requesting specific information via Link-State Updates (LSUs), finally reaching the **Full** state.
+
+<img src="/chapter-21/.images/04.png">
+
+---
+
+## 3. Designated Routers (DR) on Ethernet Links
+
+On multi-access broadcast networks (like Ethernet), OSPF elects a **Designated Router (DR)** and a **Backup Designated Router (BDR)** to act as the central point of truth for LSDB synchronization. This prevents an overwhelming amount of LSA flooding between every single router. 
+
+Normal routers (**DROthers**) only form *Full Adjacencies* with the DR and BDR, staying in a *2-Way* neighbor state with other DROthers.
+
+<img src="/chapter-21/.images/05.png">
+
+---
+
+## 4. Calculating Best Routes with SPF
+
+Once the LSDB is synchronized, each OSPF router runs the **Dijkstra Shortest Path First (SPF)** algorithm independently. OSPF uses **Cost** as its metric, which is inversely proportional to the interface bandwidth. The best route is the one with the lowest cumulative cost to the destination.
+
+<img src="/chapter-21/.images/06.png">
+
+---
+
+## 5. OSPF Multiarea Design
+
+To optimize SPF calculation time, reduce memory usage, and limit the scope of topology changes, OSPF uses a hierarchical multiarea design. All standard areas (Area 1, Area 2) must physically connect to the **Backbone Area (Area 0)** through an **Area Border Router (ABR)**.
+
+<img src="/chapter-21/.images/07.png">
+
+---
+
+## 6. Understanding Wildcard Masks
+
+When configuring OSPF (and Access Control Lists), Cisco IOS uses **Wildcard Masks** to match IP addresses. Unlike subnet masks, a wildcard mask uses a `0` to represent a "Must Match" bit and a `1` (or 255 in decimal) to represent a "Don't Care" bit. A quick way to calculate a wildcard mask is to subtract the decimal subnet mask from `255.255.255.255`.
+
+<img src="/chapter-21/.images/08.png">
+
+<br>
+
+<img src="/chapter-21/.images/09.png">
+
+---
+
 ## OSPF Terminology Glossary
+
+For quick reference, the table below summarizes the key terms and data structures used in OSPF operations.
 
 | Term | Description |
 | :--- | :--- |
@@ -32,3 +104,4 @@
 | **Router LSA (Type 1)** | An LSA created by every router to describe itself, its interfaces, and its state within an area. |
 | **Network LSA (Type 2)** | An LSA created by the DR to describe a subnet and the routers connected to it. |
 | **Summary LSA (Type 3)** | An LSA created by an ABR to describe a subnet located in another area. |
+

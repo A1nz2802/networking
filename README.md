@@ -12,6 +12,7 @@
 - Chapter 19: IP Addressing on Hosts
 - Chapter 20: Troubleshooting IPv4 Routing
 - Chapter 21: Understanding OSPF Concepts
+- Chpater 22: Implementing Basic OSPF Features
 
 ## Requirements:
 
